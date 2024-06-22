@@ -1,35 +1,22 @@
-class Solution {
-public:
-    int numberOfSubarrays(vector<int>& nums, int k) {
-        int n = nums.size();
-        vector<int> oddIndices;
+class Solution(object):
+    def numberOfSubarrays(self, nums, k):
+        # Step 1: Create a binary array where 1 indicates odd numbers and 0 indicates even numbers
+        binary = [1 if num % 2 != 0 else 0 for num in nums]
         
-        // Step 1: Identify indices of odd numbers
-        for (int i = 0; i < n; ++i) {
-            if (nums[i] % 2 != 0) {
-                oddIndices.push_back(i);
-            }
-        }
+        # Step 2: Calculate prefix sum array of the binary array
+        prefix_count = {}
+        prefix_count[0] = 1  # Base case: 1 subarray with sum 0 (considering count of odd numbers)
         
-        // Step 2: Handle cases with fewer than k odd numbers
-        if (oddIndices.size() < k) {
-            return 0;
-        }
+        current_odd_count = 0
+        count = 0
         
-        // Step 3: Calculate number of valid subarrays
-        int count = 0;
+        for num in binary:
+            current_odd_count += num
+            if current_odd_count - k in prefix_count:
+                count += prefix_count[current_odd_count - k]
+            if current_odd_count in prefix_count:
+                prefix_count[current_odd_count] += 1
+            else:
+                prefix_count[current_odd_count] = 1
         
-        // Sliding window approach
-        for (int i = 0; i <= oddIndices.size() - k; ++i) {
-            int left = i;
-            int right = i + k - 1;
-            
-            int leftCount = (left == 0) ? oddIndices[left] + 1 : oddIndices[left] - oddIndices[left - 1];
-            int rightCount = (right + 1 < oddIndices.size()) ? oddIndices[right + 1] - oddIndices[right] : n - oddIndices[right];
-            
-            count += leftCount * rightCount;
-        }
-        
-        return count;
-    }
-};
+        return count
