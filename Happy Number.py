@@ -1,27 +1,26 @@
 class Solution {
 public:
-    bool isIsomorphic(string s, string t) {
-        if (s.length() != t.length()) {
-            return false;
+    // Function to calculate the sum of squares of digits
+    int digitSquareSum(int n) {
+        int sum = 0;
+        while (n > 0) {
+            int digit = n % 10;
+            sum += digit * digit;
+            n /= 10;
         }
+        return sum;
+    }
+    
+    bool isHappy(int n) {
+        int slow = n;
+        int fast = n;
         
-        unordered_map<char, char> s_to_t;
-        unordered_map<char, char> t_to_s;
+        do {
+            slow = digitSquareSum(slow);          // Move slow one step
+            fast = digitSquareSum(fast);          // Move fast two steps
+            fast = digitSquareSum(fast);          // Move fast again
+        } while (slow != fast);                   // Stop when slow equals fast
         
-        for (int i = 0; i < s.length(); ++i) {
-            char char_s = s[i];
-            char char_t = t[i];
-            
-            if (s_to_t.find(char_s) == s_to_t.end() && t_to_s.find(char_t) == t_to_s.end()) {
-                // If neither mapping exists, create mappings
-                s_to_t[char_s] = char_t;
-                t_to_s[char_t] = char_s;
-            } else if (s_to_t[char_s] != char_t || t_to_s[char_t] != char_s) {
-                // If mappings exist but are incorrect, return false
-                return false;
-            }
-        }
-        
-        return true;
+        return slow == 1;  // If we reached 1, it's a happy number; otherwise, it's not
     }
 };
