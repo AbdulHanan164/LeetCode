@@ -1,51 +1,40 @@
 class MyQueue(object):
 
     def __init__(self):
-        self.input = []    # Stack to handle push operations
-        self.output = []   # Stack to handle pop and peek operations
+        self.stack1 = []
+        self.stack2 = []
 
     def push(self, x):
         """
-        Push element x to the back of the queue.
+        Push element x to the back of queue.
         :type x: int
         :rtype: None
         """
-        self.input.append(x)
+        self.stack1.append(x)
 
     def pop(self):
         """
-        Removes the element from the front of the queue and returns it.
+        Removes the element from in front of queue and returns that element.
         :rtype: int
         """
-        self._transfer()
-        return self.output.pop()
+        if not self.stack2:
+            while self.stack1:
+                self.stack2.append(self.stack1.pop())
+        return self.stack2.pop()
 
     def peek(self):
         """
-        Returns the element at the front of the queue.
+        Get the front element.
         :rtype: int
         """
-        self._transfer()
-        return self.output[-1]
+        if not self.stack2:
+            while self.stack1:
+                self.stack2.append(self.stack1.pop())
+        return self.stack2[-1]
 
     def empty(self):
         """
         Returns whether the queue is empty.
         :rtype: bool
         """
-        return not self.input and not self.output
-
-    def _transfer(self):
-        """
-        Helper method to transfer elements from input stack to output stack if output stack is empty.
-        """
-        if not self.output:
-            while self.input:
-                self.output.append(self.input.pop())
-
-# Example usage:
-# obj = MyQueue()
-# obj.push(x)
-# param_2 = obj.pop()
-# param_3 = obj.peek()
-# param_4 = obj.empty()
+        return len(self.stack1) == 0 and len(self.stack2) == 0
